@@ -27,6 +27,7 @@ def build_dataset(reddit: praw.Reddit, keywords: list, subreddits: list, limit: 
     data_dict = {"title": [],
                  "score": [],
                  "id": [],
+                 "replied_to": [],
                  "num_comments": [],
                  "created_on": [],
                  "body": [],
@@ -42,6 +43,7 @@ def build_dataset(reddit: praw.Reddit, keywords: list, subreddits: list, limit: 
                 data_dict["title"].append(submission.title)
                 data_dict["score"].append(submission.score)
                 data_dict["id"].append(submission.id)
+                data_dict["replied_to"].append("")
                 data_dict["num_comments"].append(submission.num_comments)
                 data_dict["created_on"].append(dt.datetime.fromtimestamp(submission.created_utc))
                 data_dict["body"].append(submission.selftext)
@@ -54,6 +56,7 @@ def build_dataset(reddit: praw.Reddit, keywords: list, subreddits: list, limit: 
                     data_dict["title"].append("")
                     data_dict["score"].append(comment.score)
                     data_dict["id"].append(comment.id)
+                    data_dict["replied_to"].append(comment.parent_id)
                     data_dict["num_comments"].append(0)
                     data_dict["created_on"].append(dt.datetime.fromtimestamp(comment.created_utc))
                     data_dict["body"].append(comment.body)
@@ -69,4 +72,3 @@ if __name__ == "__main__":
     reddit = initialize_reddit()
     data = build_dataset(reddit, keywords, subreddits, limit)
     data.to_csv("crawl_reddit.csv", index=False)
-
